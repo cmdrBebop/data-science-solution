@@ -24,18 +24,25 @@ def analysis_and_model_page():
     )
 
     st.header("1. Загрузка и предобработка данных")
-    st.markdown("Можно загрузить CSV-файл (AI4I 2020) вручную или использовать встроенный загрузчик.")
-    uploaded_file = st.file_uploader("Загрузите CSV (необязательно)", type=["csv"])
-    if uploaded_file is not None:
-        data = pd.read_csv(uploaded_file)
+    st.markdown("Выберите источник данных:")
+
+    data_source = st.radio("Источник данных", ["Из CSV-файла", "Загрузить из ucimlrepo"])
+
+    data = None
+    if data_source == "Из CSV-файла":
+        uploaded_file = st.file_uploader("Загрузите CSV-файл", type=["csv"])
+        if uploaded_file is not None:
+            data = pd.read_csv(uploaded_file)
+            st.success("CSV-файл успешно загружен.")
+        else:
+            st.warning("Пожалуйста, загрузите CSV-файл для продолжения.")
+            return
     else:
-        st.info("Загружаем датасет через ucimlrepo...")
+        st.info("Загружаем датасет AI4I 2020 через ucimlrepo...")
         from ucimlrepo import fetch_ucirepo
         ds = fetch_ucirepo(id=601)
         data = pd.concat([ds.data.features, ds.data.targets], axis=1)
-
-    drop_cols = ["UDI", "Product ID", "TWF", "HDF", "PWF", "OSF", "RNF"]
-    data = data.drop(columns=[c for c in drop_cols if c in data.columns])
+        st.success("Данные успешно загружены из ucimlrepo.")
 
     if "Type" in data.columns:
         label_enc_type = LabelEncoder()
