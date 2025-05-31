@@ -1,0 +1,8 @@
+streamlit==1.41.0
+pandas==2.2.3
+scikit-learn==1.5.2
+matplotlib==3.10.3
+seaborn==0.13.2
+ucimlrepo==0.0.6
+xgboost==2.0.3
+streamlit-reveal-slides==0.1.0
